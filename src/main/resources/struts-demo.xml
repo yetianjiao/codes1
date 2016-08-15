@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+	<constant name="struts.ui.theme" value="simple" />
+	<constant name="struts.custom.i18n.resources" value="message" />
+	<package name="demo" extends="abstract_struts">
+
+
+		<!-- 学生管理 -->
+		<action name="StudentMgrListSearch" class="cn.yumutech.web.action.demo.StudentMgrAction" method="search">
+            <result name="success">/jsp/demo/student_list.jsp</result>
+        </action>
+
+		<action name="StudentMgrAddIndex" class="cn.yumutech.web.action.demo.StudentMgrAction" method="addIndex">
+			<result name="success">/jsp/demo/student_add.jsp</result>
+		</action>
+		
+		<action name="StudentMgrAdd" class="cn.yumutech.web.action.demo.StudentMgrAction" method="add">
+            <result name="success">/jsp/demo/student_list.jsp</result>
+        </action>
+		
+		<action name="StudentMgrEditIndex" class="cn.yumutech.web.action.demo.StudentMgrAction" method="editIndex">
+            <result name="success">/jsp/demo/student_edit.jsp</result>
+        </action>
+        
+		<action name="StudentMgrEdit" class="cn.yumutech.web.action.demo.StudentMgrAction" method="edit">
+			<result name="success">/jsp/demo/student_list.jsp</result>
+		</action>
+		
+		<action name="StudentMgrDelete" class="cn.yumutech.web.action.demo.StudentMgrAction" method="delete">
+			<result name="success">/jsp/demo/student_list.jsp</result>
+		</action>
+		
+		<action name="StudentMgrDetail" class="cn.yumutech.web.action.demo.StudentMgrAction" method="detail">
+            <result name="success">/jsp/demo/student_detail.jsp</result>
+        </action>
+        
+        <!-- 设备管理 -->
+        <action name="EquipMgrListSearch" class="cn.yumutech.web.action.demo.EquipMgrAction" method="search">
+            <result name="success">/jsp/demo/equip_list.jsp</result>
+        </action>
+        
+        <action name="EquipMgrAddIndex" class="cn.yumutech.web.action.demo.EquipMgrAction" method="addIndex">
+			<result name="success">/jsp/demo/equip_add.jsp</result>
+		</action>
+		
+		<action name="EquipMgrAdd" class="cn.yumutech.web.action.demo.EquipMgrAction" method="add">
+            <result name="success">/jsp/demo/equip_list.jsp</result>
+        </action>
+        
+        <action name="EquipMgrEditIndex" class="cn.yumutech.web.action.demo.EquipMgrAction" method="editIndex">
+            <result name="success">/jsp/demo/equip_edit.jsp</result>
+        </action>
+        
+        <action name="EquipMgrDelete" class="cn.yumutech.web.action.demo.EquipMgrAction" method="delete">
+			<result name="success">/jsp/demo/equip_list.jsp</result>
+		</action>
+        
+        <action name="EquipMgrEdit" class="cn.yumutech.web.action.demo.EquipMgrAction" method="edit">
+			<result name="success">/jsp/demo/equip_list.jsp</result>
+		</action>
+		
+		
+        
+        <!-- DEMO管理 -->
+        <action name="DemoMgrListSearch" class="cn.yumutech.web.action.demo.DemoMgrAction" method="search">
+            <result name="success">/jsp/demo/demo_list.jsp</result>
+        </action>
+
+        <action name="DemoMgrAddIndex" class="cn.yumutech.web.action.demo.DemoMgrAction" method="addIndex">
+            <result name="success">/jsp/demo/demo_add.jsp</result>
+        </action>
+        
+        <action name="DemoMgrAdd" class="cn.yumutech.web.action.demo.DemoMgrAction" method="add">
+            <result name="success">/jsp/demo/demo_list.jsp</result>
+        </action>
+        
+        <action name="DemoMgrEditIndex" class="cn.yumutech.web.action.demo.DemoMgrAction" method="editIndex">
+            <result name="success">/jsp/demo/demo_edit.jsp</result>
+        </action>
+        
+        <action name="DemoMgrEdit" class="cn.yumutech.web.action.demo.DemoMgrAction" method="edit">
+            <result name="success">/jsp/demo/demo_list.jsp</result>
+        </action>
+        
+        <action name="DemoMgrDelete" class="cn.yumutech.web.action.demo.DemoMgrAction" method="delete">
+            <result name="success">/jsp/demo/demo_list.jsp</result>
+        </action>
+        
+        <action name="DemoMgrDetail" class="cn.yumutech.web.action.demo.DemoMgrAction" method="detail">
+            <result name="success">/jsp/demo/demo_detail.jsp</result>
+        </action>
+      
+	</package>
+
+</struts>

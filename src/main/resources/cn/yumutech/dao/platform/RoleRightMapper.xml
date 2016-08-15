@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.yumutech.dao.platform.RoleRightMapper">
+
+	<select id="selectRoleRightList" parameterType="int" resultType="cn.yumutech.vo.platform.RightTemplate">
+		SELECT 
+		righttemplate.code,
+		righttemplate.name,
+		case when ifnull(roleright.role_id,0) = 0 then '' else 'checked' end as hasright
+		
+		from righttemplate left join roleright on righttemplate.code = roleright.righttemplate_code and roleright.role_id = #{role_id}
+
+		
+		
+	</select>
+	
+	<select id="selectUserRightForCommon" parameterType="int" resultType="cn.yumutech.vo.platform.RightTemplate">
+        SELECT 
+        righttemplate.code,
+        righttemplate.name,
+        case when ifnull(roleright.role_id,0) = 0 then '' else 'checked' end as hasright
+        
+        from righttemplate inner join roleright on righttemplate.code = roleright.righttemplate_code
+        inner join base_user on base_user.role_id = roleright.role_id and base_user.id = #{user_id}
+          
+    </select>
+    
+    <select id="selectUserRightForAdmin"  resultType="cn.yumutech.vo.platform.RightTemplate">
+        SELECT 
+        righttemplate.code,
+        righttemplate.name,
+        'checked' as hasright
+        from righttemplate
+          
+    </select>
+    
+    
+    <insert id="insertRoleRightBatch" parameterType="cn.yumutech.vo.platform.RoleRight">
+    
+      
+        <foreach collection="codes" index="index" item="tag" open="" separator=";" close=";">
+        INSERT INTO roleright
+        (   role_id,
+            righttemplate_code
+            
+        )
+        VALUES
+         (
+          #{role_id},
+          #{tag}
+        )
+        </foreach>
+    
+        
+    </insert>
+
+	<insert id="insertRoleRight" parameterType="cn.yumutech.vo.platform.RoleRight">
+		INSERT INTO roleright
+		(   role_id,
+            righttemplate_code
+            
+		)
+		VALUES (
+		  #{role_id},
+		  #{righttemplate_code}
+		)
+	</insert>
+
+	<delete id="deleteRoleRightByRoleId" parameterType="int">
+		delete from roleright WHERE role_id = #{role_id}
+	</delete>
+
+	
+
+</mapper>

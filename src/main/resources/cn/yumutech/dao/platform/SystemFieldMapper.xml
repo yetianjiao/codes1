@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.yumutech.dao.platform.SystemFieldMapper">
+
+	<!-- 产品分类 -->
+	<select id="selectSystemFieldByProductCode" parameterType="string" resultType="cn.yumutech.vo.platform.SystemField">
+		SELECT 
+		  base_system_field.id,
+		  base_system_field.system_product_code,
+		  base_system_product.name AS  system_product_name,
+		  base_system_field.code,
+		  base_system_field.name,
+		  base_system_field.order_no,
+		  base_system_field.allow_edit_option,
+		  base_system_field.remark
+		FROM base_system_field
+		INNER JOIN base_system_product ON base_system_product.code = base_system_field.system_product_code			
+		   WHERE base_system_field.system_product_code = #{system_product_code}
+		ORDER BY base_system_field.order_no ASC
+	</select>
+	
+	<select id="selectSystemFieldByProductCodeCount" parameterType="string" resultType="int">
+	   SELECT COUNT(id) FROM base_system_field  WHERE base_system_field.system_product_code = #{system_product_code}	   	
+	</select>
+	
+	
+	<!-- 获取所有的产品分类 -->
+	<select id="selectSystemFieldAll" resultType="cn.yumutech.vo.platform.SystemField">
+	     SELECT 
+	         id,
+	         name
+	     FROM
+	        base_system_field 
+	      WHERE allow_edit_option=1
+	     ORDER BY order_no ASC
+	
+	</select>
+
+</mapper>

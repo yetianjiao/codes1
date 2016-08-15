@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.yumutech.dao.platform.SystemOptionMapper">
+
+	<!-- 项目 -->
+	<select id="selectSystemOptionByFieldID" parameterType="int" resultType="cn.yumutech.vo.platform.SystemOption">
+		SELECT 
+		  base_system_option.id,
+		  base_system_option.system_field_id,
+		  base_system_field.name AS system_field_name,
+		  base_system_option.code,
+		  base_system_option.name,
+		  base_system_option.order_no,
+		  base_system_option.remark
+		FROM base_system_option
+		INNER JOIN  base_system_field ON base_system_option.system_field_id = base_system_field.id
+		WHERE base_system_option.system_field_id  = #{system_field_id}
+        ORDER BY base_system_option.order_no ASC
+	</select>
+	
+	<!-- 根据项目filedId来查询记录数 -->
+	<select id="selectSystemOptionByFieldIDCount" parameterType="int" resultType="int">
+	   SELECT COUNT(id) FROM base_system_option WHERE base_system_option.system_field_id  = #{system_field_id}	
+	</select>
+	
+	
+	<select id="selectSystemOption" parameterType="map" resultType="cn.yumutech.vo.platform.SystemOption">
+        SELECT 
+          base_system_option.id,
+          base_system_option.system_field_id,
+          base_system_field.name AS system_field_name,
+          base_system_option.code,
+          base_system_option.name,
+          base_system_option.order_no,
+          base_system_option.remark
+        FROM base_system_option
+        INNER JOIN  base_system_field ON base_system_option.system_field_id = base_system_field.id
+        WHERE base_system_field.system_product_code = #{system_product_code} 
+              AND base_system_field.code =#{system_field_code} 
+        ORDER BY base_system_option.order_no ASC
+    </select>
+    
+    <insert id="insertSystemOption" parameterType="cn.yumutech.vo.platform.SystemOption" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO base_system_option
+        (   system_field_id,
+            code,
+            name,
+            order_no,
+            remark
+        )
+        VALUES (
+          #{system_field_id},
+          #{code},
+          #{name},
+          #{order_no},
+          #{remark}
+        )
+    </insert>
+
+    <update id="updateSystemOption" parameterType="cn.yumutech.vo.platform.SystemOption">
+        UPDATE base_system_option
+        SET   code = #{code},
+              name = #{name},
+              order_no = #{order_no},
+              remark = #{remark}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteSystemOption" parameterType="int">
+        DELETE FROM base_system_option WHERE id = #{id}
+    </delete>
+	
+	<select id="selectSystemOptionForId" resultType="cn.yumutech.vo.platform.SystemOption" parameterType="int">
+	    SELECT
+	        id, 
+	        system_field_id,
+            code,
+            name,
+            order_no,
+            remark
+	    FROM base_system_option
+	    WHERE
+	      id = #{id}
+	      limit 1
+	</select>
+	
+</mapper>

@@ -1,0 +1,20 @@
+#uploadPreview,#uploadPreview2,#uploadPreview3,#uploadPreview4,#uploadPreview5,#uploadPreview6 {
+    width: 60px;
+    height: 40px;
+    background-position: center center;
+    background-size: cover;
+    border: 4px solid #fff;
+    -webkit-box-shadow: 0 0 1px 1px rgba(0, 0, 0, .3);
+    display: inline-block;
+}
+
+#listImage {
+	width: 60px;
+	height: 40px;
+	background-size: cover;
+	border: 4px solid #fff;
+	max-width: 60px;
+	width: e?xpression(this.width > 60 ? "60px" : this.width);
+	max-height: 40px;
+	height: e?xpression(this.height > 40 ? "40px" : this.height);
+}

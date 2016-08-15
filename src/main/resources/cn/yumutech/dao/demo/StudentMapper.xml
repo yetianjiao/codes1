@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.yumutech.dao.demo.StudentMapper">
+
+	<select id="selectStudentList" parameterType="cn.yumutech.vo.demo.Student"
+		resultType="cn.yumutech.vo.demo.Student">
+		SELECT 
+                student.id,
+                student.sn,
+                student.`name`,
+                student.gender,
+                getOptionValue('global','gender',student.gender) AS gender_name,
+                student.age,
+                student.is_deleted
+           FROM student
+          WHERE student.is_deleted = 0
+		<include refid="condition_StudentList" />
+		LIMIT #{offset}
+		<if test="row_count!=0">
+			,#{row_count}
+		</if>
+	</select>
+
+	<sql id="condition_StudentList">
+		<if test="keyword_condition !=null and keyword_condition !=''">
+            AND CONCAT(IFNULL(student.sn,''),IFNULL(student.`name`,'')) like CONCAT('%', #{keyword_condition}, '%') 
+        </if>
+        
+        <if test="gender !=null and gender !=0">
+            AND student.gender = #{gender}
+        </if>
+        
+		<if test="orderBy!=null and orderBy!=''">
+			ORDER BY ${orderBy}
+		</if>
+	</sql>
+
+	<select id="selectStudentListCount" parameterType="cn.yumutech.vo.demo.Student"
+		resultType="int">
+		SELECT COUNT(student.id) FROM student WHERE student.is_deleted = 0
+		<include refid="condition_StudentList" />
+	</select>
+
+	<insert id="insertStudent" parameterType="cn.yumutech.vo.demo.Student" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO student
+		(   sn,
+            name,
+            gender,
+            age,
+            is_deleted
+		)
+		VALUES (
+		  #{sn},
+		  #{name},
+		  #{gender},
+		  #{age},
+		 0
+		)
+	</insert>
+
+	<update id="updateStudent" parameterType="cn.yumutech.vo.demo.Student">
+		UPDATE student
+		SET   sn = #{sn},
+		      name = #{name},
+		      gender = #{gender},
+		      age = #{age}  
+		WHERE id = #{id}
+	</update>
+
+	<update id="deleteStudent" parameterType="int">
+		UPDATE student SET is_deleted = 1 WHERE id = #{id}
+	</update>
+
+
+	<select id="selectStudentById" parameterType="int" resultType="cn.yumutech.vo.demo.Student">
+		SELECT 
+                student.id,
+                student.sn,
+                student.`name`,
+                student.gender,
+                getOptionValue('global','gender',student.gender) AS gender_name,
+                student.age,
+                student.is_deleted
+           FROM student
+          WHERE student.is_deleted = 0  AND student.id= #{id}
+
+	</select>
+
+</mapper>

@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.yumutech.dao.platform.UserMapper">
+
+	<!-- user -->
+	<select id="selectUserList" parameterType="cn.yumutech.vo.platform.User"
+		resultType="cn.yumutech.vo.platform.User">
+		SELECT
+		user.id,
+        user.username,
+        user.password,
+        user.nickname,
+        user.gender,
+        getOptionValue('global','gender',user.gender) AS gender_name,
+        user.birthday,
+        user.email,
+        user.mobile,
+        user.telephone,
+        user.qq,
+        user.address,
+        user.post_code,
+        user.role_id,
+        role.name as role_name, 
+        user.user_state,
+        getOptionValue('global','user_state',user.user_state) AS user_state_name,
+        user.is_delete,
+        user.logo_path,
+        concat(user.id,' - ', user.username,' - ',ifnull(user.nickname,'-'))as label_display_name
+		FROM base_user user
+		LEFT JOIN base_role role ON user.role_id = role.id	
+		WHERE user.username != 'admin' AND user.is_delete = 0
+		<include refid="condition_UserList" />
+		LIMIT #{offset}
+		<if test="row_count!=0">
+			,#{row_count}
+		</if>
+	</select>
+
+	<sql id="condition_UserList">
+		<if test="keyword_condition !=null and keyword_condition !=''">
+            AND CONCAT(IFNULL(user.username,''),IFNULL(user.nickname,'')) like CONCAT('%', #{keyword_condition}, '%') 
+        </if>
+        <if test="role_id !=null and role_id !=0">
+            AND role.id = #{role_id}
+        </if>
+		<if test="orderBy!=null and orderBy!=''">
+			ORDER BY ${orderBy}
+		</if>
+	</sql>
+
+	<select id="selectUserListCount" parameterType="cn.yumutech.vo.platform.User"
+		resultType="int">
+		SELECT COUNT(user.id)
+        FROM base_user user
+        LEFT JOIN base_role role ON user.role_id = role.id
+        WHERE user.username != 'admin' AND user.is_delete = 0
+		<include refid="condition_UserList" />
+	</select>
+
+	<insert id="insertUser" parameterType="cn.yumutech.vo.platform.User" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO base_user
+		(   username,
+            password,
+            nickname,
+            gender,
+            birthday,
+            email,
+            mobile,
+            telephone,
+            qq,
+            address,
+            post_code,
+            role_id,
+            user_state,
+            is_delete,
+            logo_path
+		)
+		VALUES (
+		  #{username},
+		  #{password},
+		  #{nickname},
+		  #{gender},
+		  #{birthday},
+		  #{email},
+		  #{mobile},
+		  #{telephone},
+		  #{qq},
+		  #{address},
+		  #{post_code},
+		  #{role_id},
+		  #{user_state},
+		  #{is_delete},
+		  #{logo_path}
+		)
+	</insert>
+
+	<update id="updateUser" parameterType="cn.yumutech.vo.platform.User">
+		UPDATE base_user
+		SET   username = #{username},
+		      <if test="logo_path !=null and logo_path != ''">
+             logo_path = #{logo_path}, 
+             </if>  
+		      nickname = #{nickname},
+		      gender = #{gender},
+		      birthday = #{birthday},
+		      email = #{email},
+		      mobile = #{mobile},
+		      telephone = #{telephone},
+		      qq = #{qq},
+		      address = #{address},
+		      post_code = #{post_code},
+		      role_id = #{role_id},
+		      user_state = #{user_state},
+		      is_delete = #{is_delete}
+		WHERE id = #{id}
+	</update>
+
+	<update id="deleteUser" parameterType="cn.yumutech.vo.platform.User">
+		UPDATE base_user SET is_delete = 1 WHERE id = #{id}
+	</update>
+
+	<select id="getAllUser" resultType="cn.yumutech.vo.platform.User">
+		SELECT 
+		id,
+        username,
+        password,
+        nickname,
+        gender,
+        birthday,
+        email,
+        mobile,
+        telephone,
+        qq,
+        address,
+        post_code,
+        role_id,
+        user_state,
+        is_delete,
+        logo_path,
+        concat(id,' - ', username,' - ',ifnull(nickname,'-'))as label_display_name
+		FROM base_user WHERE is_delete = 0 AND username != 'admin'
+	</select>
+	
+	<select id="selectUserByType" parameterType="string" resultType="cn.yumutech.vo.platform.User">
+        SELECT 
+        id,
+        username,
+        password,
+        nickname,
+        gender,
+        birthday,
+        email,
+        mobile,
+        telephone,
+        qq,
+        address,
+        post_code,
+        role_id,
+        user_state,
+        is_delete,
+        logo_path,
+        concat(id,' - ', username,' - ',ifnull(nickname,'-'))as label_display_name
+        FROM base_user WHERE is_delete = 0 
+        and user_type=#{user_type}
+    </select>
+
+
+	<select id="isUserExist" parameterType="string" resultType="int">
+		SELECT count(1) FROM base_user WHERE username = #{username}
+
+	</select>
+
+	<select id="isUserEnabled" parameterType="string" resultType="int">
+		SELECT count(1) FROM base_user WHERE username = #{username} AND is_delete = 0
+	</select>
+
+	<select id="login" parameterType="cn.yumutech.vo.platform.User" resultType="cn.yumutech.vo.platform.User">
+		SELECT
+        user.id,
+        user.username,
+        user.password,
+        user.nickname,
+        user.gender,
+        getOptionValue('global','gender',user.gender) AS gender_name,
+        user.birthday,
+        user.email,
+        user.mobile,
+        user.telephone,
+        user.qq,
+        user.address,
+        user.post_code,
+        user.role_id,
+        role.name as role_name, 
+        user.user_state,
+        getOptionValue('global','user_state',user.user_state) AS user_state_name,
+        user.is_delete,
+        user.logo_path
+        FROM base_user user
+        LEFT JOIN base_role role ON user.role_id = role.id         
+        WHERE user.is_delete = 0
+		AND user.username = #{username} AND user.password = #{password}
+	</select>
+
+	<update id="updatePwd" parameterType="cn.yumutech.vo.platform.User">
+		UPDATE base_user 
+		SET password=#{password_new} 
+		WHERE username=#{username} AND password = #{password}
+	</update>
+
+	<select id="selectUserById" parameterType="int" resultType="cn.yumutech.vo.platform.User">
+		SELECT
+        user.id,
+        user.username,
+        user.password,
+        user.nickname,
+        user.gender,
+        getOptionValue('global','gender',user.gender) AS gender_name,
+        user.birthday,
+        user.email,
+        user.mobile,
+        user.telephone,
+        user.qq,
+        user.address,
+        user.post_code,
+        user.role_id,
+        role.name as role_name, 
+        user.user_state,
+        getOptionValue('global','user_state',user.user_state) AS user_state_name,
+        user.is_delete,
+        user.logo_path
+        FROM base_user user
+        LEFT JOIN base_role role ON user.role_id = role.id
+        WHERE user.is_delete = 0 AND user.id= #{id}
+
+	</select>
+
+	<update id="updateUserPersonalInfo" parameterType="cn.yumutech.vo.platform.User">
+		UPDATE base_user
+        SET   nickname = #{nickname},
+              gender = #{gender},
+              birthday = #{birthday},
+              email = #{email},
+              mobile = #{mobile},
+              telephone = #{telephone},
+              qq = #{qq},
+               <if test="logo_path !=null and logo_path != ''">
+             logo_path = #{logo_path}, 
+             </if>  
+              address = #{address},
+              post_code = #{post_code}
+        WHERE id = #{id}
+	</update>
+
+	<update id="resetPwd" parameterType="cn.yumutech.vo.platform.User">
+		UPDATE base_user SET
+		password=#{password_new} where username=#{username}
+	</update>
+
+	<!-- 根据用户姓名查询用户ID -->
+	<select id="selectUserIDByUserName" parameterType="string" resultType="int">
+		SELECT id FROM base_user WHERE username=#{username} limit 1
+	</select>
+
+</mapper>

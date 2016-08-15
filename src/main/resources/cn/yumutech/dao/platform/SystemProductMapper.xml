@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.yumutech.dao.platform.SystemProductMapper">
+
+	<!-- 产品配置 -->
+	<select id="getAllSystemProduct" resultType="cn.yumutech.vo.platform.SystemProduct">
+		SELECT code, name, remark, order_no FROM base_system_product ORDER BY order_no ASC
+
+	</select>
+
+	<select id="selectSystemProductByCode" parameterType="string" resultType="cn.yumutech.vo.platform.SystemProduct">
+		SELECT code, name, remark, order_no FROM base_system_product WHERE code = #{code}
+	</select>
+	
+
+</mapper>

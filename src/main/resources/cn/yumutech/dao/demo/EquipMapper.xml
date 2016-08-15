@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.yumutech.dao.demo.EquipMapper">
+
+	<select id="selectAllEquipment" parameterType="cn.yumutech.vo.demo.Equip"
+		resultType="cn.yumutech.vo.demo.Equip">
+		SELECT 
+				id,
+                e_name ,
+                e_price ,
+                e_owner
+           FROM equipment 
+           WHERE equipment.is_deleted = 0
+		<include refid="condition_EquipList" />
+		LIMIT #{offset}
+		<if test="row_count!=0">
+			,#{row_count}
+		</if>
+	</select>
+
+	<sql id="condition_EquipList">
+		<if test="keyword_condition !=null and keyword_condition !=''">
+            AND CONCAT(IFNULL(equipment.e_name,''),IFNULL(equipment.e_owner,'')) like CONCAT('%', #{keyword_condition}, '%') 
+        </if>
+		<if test="orderBy!=null and orderBy!=''">
+			ORDER BY ${orderBy}
+		</if>
+	</sql>
+
+	
+	<select id="selectEquipmentCount" parameterType="cn.yumutech.vo.demo.Equip"
+		resultType="int">
+		SELECT COUNT(equipment.id) FROM equipment WHERE equipment.is_deleted = 0
+	</select>
+	
+	<insert id="insertEquip" parameterType="cn.yumutech.vo.demo.Equip" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO equipment
+		(   
+			e_name,
+            e_price,
+            e_owner
+		)
+		VALUES (
+		  #{e_name},
+		  #{e_price},
+		  #{e_owner}
+		)
+	</insert>
+	
+	<select id="selectselectEquipById" parameterType="int"
+		resultType="cn.yumutech.vo.demo.Equip">
+		SELECT 
+				id,
+                e_name,
+                e_price,
+                e_owner
+           FROM equipment 
+           WHERE id=#{indx} and is_deleted=0
+	</select>
+	
+	<update id="updateEquip" parameterType="cn.yumutech.vo.demo.Equip">
+		UPDATE equipment
+		SET   
+			  e_name = #{e_name},
+		      e_price = #{e_price},
+		      e_owner = #{e_owner}
+		WHERE id = #{id}
+	</update>
+
+	<update id="deleteEquip" parameterType="int">
+		UPDATE equipment SET is_deleted = 1 WHERE id = #{id}
+	</update>
+	
+</mapper>

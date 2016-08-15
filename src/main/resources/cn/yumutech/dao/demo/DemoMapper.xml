@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.yumutech.dao.demo.DemoMapper">
+
+	<select id="selectDemoList" parameterType="cn.yumutech.vo.demo.Demo" resultType="cn.yumutech.vo.demo.Demo">
+		SELECT 
+                demo.id,
+                demo.name,
+                demo.remark
+           FROM demo demo
+          WHERE 1=1
+		<include refid="condition_DemoList" />
+		LIMIT #{offset}
+		<if test="row_count!=0">
+			,#{row_count}
+		</if>
+	</select>
+
+	<sql id="condition_DemoList">
+		<if test="keyword_condition !=null and keyword_condition !=''">
+            AND CONCAT(IFNULL(demo.name,''),IFNULL(demo.remark,'')) like CONCAT('%', #{keyword_condition}, '%') 
+        </if>
+        
+		<if test="orderBy!=null and orderBy!=''">
+			ORDER BY ${orderBy}
+		</if>
+		
+		<if test="orderBy==null or orderBy==''">
+            ORDER BY demo.name asc
+        </if>
+        
+	</sql>
+
+	<select id="selectDemoListCount" parameterType="cn.yumutech.vo.demo.Demo"
+		resultType="int">
+		SELECT COUNT(demo.id) FROM demo WHERE 1=1
+		<include refid="condition_DemoList" />
+	</select>
+
+	<insert id="insertDemo" parameterType="cn.yumutech.vo.demo.Demo" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO demo
+		(   name,
+            remark
+		)
+		VALUES (
+		  #{name},
+		  #{remark}
+		)
+	</insert>
+
+	<update id="updateDemo" parameterType="cn.yumutech.vo.demo.Demo">
+		UPDATE demo
+		SET   name = #{name},
+		      remark = #{remark}
+		WHERE id = #{id}
+	</update>
+
+	<delete id="deleteDemo" parameterType="int">
+		DELETE FROM demo WHERE id = #{id}
+	</delete>
+
+
+	<select id="selectDemoById" parameterType="int" resultType="cn.yumutech.vo.demo.Demo">
+		SELECT 
+                demo.id,
+                demo.name,
+                demo.remark
+           FROM demo demo
+          WHERE demo.id= #{id}
+
+	</select>
+
+</mapper>

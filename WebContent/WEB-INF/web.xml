@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
+  <display-name>YUMUTECH-FRAMEWORK-1.0</display-name>
+  
+  <!-- 
+	context-parm 声明全局变量以及对应值  
+   -->
+  <context-param>
+    <param-name>webAppRootKey</param-name>
+    <param-value>yumutech</param-value>
+  </context-param>
+  <context-param>
+  <!-- spring的配置 -->
+    <param-name>contextConfigLocation</param-name>
+    <param-value>classpath:applicationContext.xml</param-value>
+  </context-param>
+  <context-param>
+    <param-name>log4jConfigLocation</param-name>
+    <param-value>classpath:log4j.properties</param-value>
+  </context-param>
+  
+  <!-- 过滤器 -->
+  <filter>
+  	<!-- 
+  		1、ckfinder： Web浏览器的Ajax文件管理器
+	-->
+    <filter-name>FileUploadFilter</filter-name>
+    <filter-class>com.ckfinder.connector.FileUploadFilter</filter-class>
+    <init-param>
+      <param-name>sessionCookieName</param-name>
+      <param-value>JSESSIONID</param-value>
+    </init-param>
+    <init-param>
+      <param-name>sessionParameterName</param-name>
+      <param-value>jsessionid</param-value>
+    </init-param>
+  </filter>
+  <!-- 过滤范围 -->
+  <filter-mapping>
+    <filter-name>FileUploadFilter</filter-name>
+    <url-pattern>/ckfinder/core/connector/java/connector.java</url-pattern>
+  </filter-mapping>
+  
+  <!-- 
+  	编码方式过滤器
+   -->
+  <filter>
+    <filter-name>encodingFilter</filter-name>
+    <filter-class>
+            org.springframework.web.filter.CharacterEncodingFilter
+        </filter-class>
+    <init-param>
+      <param-name>encoding</param-name>
+      <param-value>utf-8</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>encodingFilter</filter-name>
+    <!-- 过滤范围是所有的jsp页面 -->
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  
+  <!-- 
+  Struts2过滤器，对所有的jsp监听，根据FCKFilter分类处理请求
+  -->
+  <filter>
+    <filter-name>struts2</filter-name>
+    <!-- 过滤器的实现类!!!!! -->
+    <filter-class>cn.yumutech.web.filter.FCKFilter</filter-class>
+    <init-param>
+      <param-name>config</param-name>
+      <param-value>struts-default.xml,struts-plugin.xml,struts-abstract.xml,struts.xml</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>struts2</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  
+  <!-- 监听器 ，用于打印日志信息-->
+  <listener>
+    <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+  </listener>
+  <listener>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+
+ <!-- 
+	servlet配置
+  -->
+  <servlet>
+    <servlet-name>ConnectorServlet</servlet-name>
+    <servlet-class>com.ckfinder.connector.ConnectorServlet</servlet-class>
+    <init-param>
+      <param-name>XMLConfig</param-name>
+      <param-value>/WEB-INF/config.xml</param-value>
+    </init-param>
+    <init-param>
+      <param-name>debug</param-name>
+      <param-value>false</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ConnectorServlet</servlet-name>
+    <url-pattern>/ckfinder/core/connector/java/connector.java</url-pattern>
+  </servlet-mapping>
+  <session-config>
+    <session-timeout>10</session-timeout>
+  </session-config>
+  
+  <!-- 默认的首页 -->
+  <welcome-file-list>
+    <welcome-file>/jsp/login.jsp</welcome-file>
+  </welcome-file-list>
+</web-app>
