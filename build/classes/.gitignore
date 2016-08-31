@@ -1,12 +1,2 @@
 /applicationContext.xml
 /cn/
-/database/
-/log4j.properties
-/log4j_dev.properties
-/log4j_prd.properties
-/main/
-/message.properties
-/struts-abstract.xml
-/struts-demo.xml
-/struts-platform.xml
-/xwork-conversion.properties

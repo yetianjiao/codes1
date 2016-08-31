@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+	<constant name="struts.ui.theme" value="simple" />
+	<constant name="struts.custom.i18n.resources" value="message" />
+	<package name="platform" extends="abstract_struts">
+
+		<!-- 首页 -->
+		<action name="StartPage" class="cn.yumutech.web.action.StartPageAction" method="index">
+			<result name="success">/jsp/index.jsp</result>
+		</action>
+		<action name="PortalChange" class="cn.yumutech.web.action.StartPageAction" method="change">
+			<result name="success">/jsp/index.jsp</result>
+		</action>
+
+		<!-- 登录 -->
+		<action name="LoginClear" class="cn.yumutech.web.action.LoginMgrAction" method="index">
+			<result name="success">/jsp/Login.jsp</result>
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+		</action>
+		
+		<action name="LoginRedirect" class="cn.yumutech.web.action.LoginMgrAction" method="loginRedirect">
+			<result name="success">/jsp/login.jsp</result>
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+		</action>
+		
+		<action name="LoginOut" class="cn.yumutech.web.action.LoginMgrAction" method="loginOut">
+			<result name="success">/jsp/login.jsp</result>
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+		</action>
+		
+		<action name="LoginSearch" class="cn.yumutech.web.action.LoginMgrAction" method="login">
+			<result name="input">/jsp/login.jsp</result>
+			<result name="success" type="redirectAction">StartPage</result>
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+		</action>
+
+		<!-- 用户管理 -->
+		<action name="UserMgrListSearch" class="cn.yumutech.web.action.platform.UserMgrAction" method="search">
+            <result name="success">/jsp/platform/user_list.jsp</result>
+        </action>
+
+		<action name="UserMgrAddIndex" class="cn.yumutech.web.action.platform.UserMgrAction" method="index">
+			<result name="success">/jsp/platform/user_add.jsp</result>
+		</action>
+		
+		<action name="UserMgrAdd" class="cn.yumutech.web.action.platform.UserMgrAction" method="add">
+            <result name="success">/jsp/platform/user_list.jsp</result>
+            <result name="input">/jsp/actionmessage.jsp</result>
+        </action>
+		
+		<action name="UserMgrEditIndex" class="cn.yumutech.web.action.platform.UserMgrAction" method="editIndex">
+            <result name="success">/jsp/platform/user_edit.jsp</result>
+        </action>
+        
+		<action name="UserMgrEdit" class="cn.yumutech.web.action.platform.UserMgrAction" method="edit">
+			<result name="success">/jsp/platform/user_list.jsp</result>
+		</action>
+		
+		<action name="UserMgrDelete" class="cn.yumutech.web.action.platform.UserMgrAction" method="delete">
+			<result name="success">/jsp/platform/user_list.jsp</result>
+		</action>
+		
+		<action name="UserMgrDetail" class="cn.yumutech.web.action.platform.UserMgrAction" method="detail">
+            <result name="success">/jsp/platform/user_detail.jsp</result>
+        </action>
+		
+		<action name="ResetPwd" class="cn.yumutech.web.action.platform.UserMgrAction" method="reset">
+			<result name="success">/jsp/platform/user_list.jsp</result>
+		</action>
+		
+		 <action name="UpdatePersonalPasswordIndex" class="cn.yumutech.web.action.platform.UserPersonalInfoUpdateAction" method="updatePasswordIndex">          
+            <result name="success">/jsp/platform/update_password.jsp</result>
+        </action>
+        
+        <!-- 修改密码 -->
+        <action name="UserPersionalPasswordUpdate" class="cn.yumutech.web.action.platform.UserPersonalInfoUpdateAction" method="userPasswordUpdate">
+            <result type="chain">
+               <param name="actionName">UpdatePersonalPasswordIndex</param>
+               <param name="namespace">/</param>
+            </result>
+        </action>
+        
+        <!-- 显示修改用户信息页面 -->
+        <action name="UpdatePersionalInfoIndex" class="cn.yumutech.web.action.platform.UserPersonalInfoUpdateAction" method="updateInfoIndex">
+            <result>/jsp/platform/update_info.jsp</result>
+        </action>
+        
+        <!--修改用户信息 -->        
+         <action name="UpdatePersionalUserInfo" class="cn.yumutech.web.action.platform.UserPersonalInfoUpdateAction" method="updateUserInfo">
+            <result type="chain">
+               <param name="actionName">UpdatePersionalInfoIndex</param>
+               <param name="namespace">/</param>
+            </result>
+        </action>
+
+		<!-- 角色管理 -->
+		<action name="RoleMgrListSearch" class="cn.yumutech.web.action.platform.RoleMgrAction" method="search">
+			<result name="success">/jsp/platform/role_list.jsp</result>
+		</action>
+		<!-- right -->
+		<action name="RoleRightMgrAddIndex" class="cn.yumutech.web.action.platform.RoleMgrAction" method="index">
+            <result name="success">/jsp/platform/roleright_list.jsp</result>
+        </action>
+        
+        <action name="RoleRightMgrAdd" class="cn.yumutech.web.action.platform.RoleMgrAction" method="add">
+            <result name="success">/jsp/platform/roleright_list.jsp</result>
+
+        </action>
+		
+		
+        <!-- 数据字典 -->
+        <action name="DictionaryIndex">
+            <result name="success">/jsp/platform/dictionary_list.jsp</result>
+        </action>
+        
+        <!-- 数据字典列表 -->
+        <action name="DictionaryMgrListSearch" class="cn.yumutech.web.action.platform.DictionaryMgrAction" method="search">
+            <result name="success">/jsp/platform/dictionary_list.jsp</result>
+        </action>      
+        
+        <!-- 添加数据字典 -->
+        <action name="OptionMgrListSearch" class="cn.yumutech.web.action.platform.DictionaryMgrAction" method="optionSearch">
+            <result name="success">/jsp/platform/option_list.jsp</result>
+        </action>
+        
+        <action name="OptionMgrAddIndex" class="cn.yumutech.web.action.platform.DictionaryMgrAction" method="index">
+              <result name="success">/jsp/platform/option_add.jsp</result>
+        </action>
+        
+         <action name="OptionMgrAdd" class="cn.yumutech.web.action.platform.DictionaryMgrAction" method="add">
+              <result name="success">/jsp/platform/option_list.jsp</result>
+        </action>
+        
+         <action name="OptionMgrEditIndex" class="cn.yumutech.web.action.platform.DictionaryMgrAction" method="editIndex">
+            <result name="success">/jsp/platform/option_edit.jsp</result>
+        </action>
+
+        <action name="OptionMgrEdit" class="cn.yumutech.web.action.platform.DictionaryMgrAction" method="edit">
+            <result name="success">/jsp/platform/option_list.jsp</result>
+        </action>
+        
+        <action name="OptionMgrDelete" class="cn.yumutech.web.action.platform.DictionaryMgrAction" method="delete">
+            <result name="success">/jsp/platform/option_list.jsp</result>
+        </action>
+	</package>
+
+</struts>
